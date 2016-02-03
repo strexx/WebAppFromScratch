@@ -2,4 +2,4 @@
 
 Research for the minor everything web.
 
-<a target="_blank" href="http://strexx.github.io/webappfromscratch">http://strexx.github.io/webappfromscratch</a>
+<a target="_blank" href="http://strexx.github.io/WebAppFromScratch">http://strexx.github.io/WebAppFromScratch</a>
