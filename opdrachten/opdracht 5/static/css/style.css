@@ -1,0 +1,63 @@
+* {
+	font-family: 'Roboto', sans-serif;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body > header {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+}
+
+header h1 {
+	padding-left: .5em;
+}
+
+header nav {
+	padding-right: 1em;
+}
+
+header h1 a {
+	font-size: 1.5em;
+	text-decoration: none;
+}
+
+nav ul li {
+	padding: 0;
+	display: inline-block;
+}
+
+nav ul a {
+	padding: .1em 1em;
+	text-decoration: none;
+}
+
+main {
+	display: flex;
+	flex-flow: column wrap;
+	padding: 1em;
+	background-color: hsl(233, 20%, 90%);
+	height: 500px;
+}
+
+.template {
+	display: none;
+}
+
+main .template {
+	display: block;
+}
+
+/* FOOTER */
+
+footer {
+	width: 100%;	
+}
+
+footer p {
+	text-align: center;
+}
