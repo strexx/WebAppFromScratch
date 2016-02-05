@@ -10,6 +10,10 @@
 		}
 
 	}
+	
+	var render = function() {
+		
+	}
 
 	var loader = function() {
 
