@@ -10,6 +10,13 @@
 		}
 
 	}
+<<<<<<< HEAD
+=======
+	
+	var render = function() {
+		
+	}
+>>>>>>> master
 
 	var loader = function() {
 
@@ -23,4 +30,8 @@
 
 	// Initialize
 	loader.init();
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> master
