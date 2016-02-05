@@ -8,4 +8,4 @@ Eveneens voor Single Page Web Applications (SPA's).
 
 #### Opdrachten 4 en 5
 -----------------------------------------
-To be continued..
+Zie opdrachten map
