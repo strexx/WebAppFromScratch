@@ -37,7 +37,7 @@
 
 		      var GetTemplate = new HttpClient();
 			  GetTemplate.get('./static/templates/books.mst', function (response) {			  
-	            document.querySelector('#target').innerHTML = Mustache.render(response, {
+	            document.querySelector('main').innerHTML = Mustache.render(response, {
 	            	"books": booksArray
 	            });
 	          });
