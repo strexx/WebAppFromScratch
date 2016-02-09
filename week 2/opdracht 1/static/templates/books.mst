@@ -1,8 +1,10 @@
 <ul>
 	{{#books}}
-		<li>Titel: {{ title }}</li>
-		<li>Auteur: {{ author }}</li>
-		<li>Beschrijving: {{ description }}</li>
-		<li><img src="{{ image }}" /></li><br />
+	<div class="book">
+		<li><img src="{{ image }}" /></li>
+		<li class="title"><b>Titel:</b> {{ title }}</li>
+		<li class="author"><b>Auteur:</b> {{ author }}</li>
+		<li class="description"><b>Beschrijving:</b><br /><br /> {{ description }}</li>
+	</div>
 	{{/books}}
 </ul>
