@@ -1,60 +1,153 @@
-(function () {
+(function() {
 
-	"use strict";
+    "use strict";
 
-	routie({
-	    
-	    'home': function() {
+    var router = {
+        "baseUrl": "http://127.0.0.1:8080/"
+    }
 
-	    	// Get home template from templates folder
+    routie({
 
-	    	var GetTemplate = new HttpClient();
-			 GetTemplate.get('./static/templates/home.mst', function (response) {
-	            document.querySelector('#target').innerHTML = Mustache.render(response);
-	        });
-	    },
-	    
-	    'books': function() {
+        'home': function() {
 
-	    	  // Get local storage items
+            // Get home template from templates folder
 
-	    	  var data = JSON.parse(localStorage.getItem('data'));	    	 
-	    	  var booksArray = [];
-	    	  
-	    	  // Loop through data and get information
+            var GetTemplate = new HttpClient();
+            GetTemplate.get('./static/templates/home.mst', function(response) {
+                document.querySelector('main').innerHTML = Mustache.render(response);
+            });
+        },
 
-	    	  for(var i=0; i < data.results.length; i++) {
-			    	var books = {
-			    	  	author: data.results[i].book_details[0].author,
-			    	  	title: data.results[i].book_details[0].title,
-			    	  	description: data.results[i].book_details[0].description,
-			    	  	image: data.results[i].book_details[0].book_image
-			    	};
-                    booksArray.push(books);
-              }
+        'books': function() {
 
-              // Get books template from templates folder
+            // Get local storage items
 
-		      var GetTemplate = new HttpClient();
-			  GetTemplate.get('./static/templates/books.mst', function (response) {			  
-	            document.querySelector('main').innerHTML = Mustache.render(response, {
-	            	"books": booksArray
-	            });
-	          });
-	    },
-    	
-    	'book/:id': function() {
-    		
-    	},
+            var data = JSON.parse(localStorage.getItem('data'));
+            var booksArray = [];
 
-    	'': function() {
-    		
-    	},
+            // Loop through data and get information
 
-    	'*': function() {
-			alert("404 page not found.");
-	    }
+            for (var i = 0; i < data.results.length; i++) {
+                var books = {
+                    id: i,
+                    author: data.results[i].book_details[0].author,
+                    title: data.results[i].book_details[0].title,
+                    description: data.results[i].book_details[0].description,
+                    image: data.results[i].book_details[0].book_image,
+                    price: data.results[i].book_details[0].price,
+                };
+                booksArray.push(books);
+            }
 
-	});
+            // Get books template from templates folder
+
+            var GetTemplate = new HttpClient();
+            GetTemplate.get('./static/templates/books.mst', function(response) {
+                document.querySelector('main').innerHTML = Mustache.render(response, {
+                    "books": booksArray
+                });
+            });
+        },
+
+        'books/:id': function(id) {
+
+            // Get local storage items
+
+            var data = JSON.parse(localStorage.getItem('data'));
+
+            var GetTemplate = new HttpClient();
+            GetTemplate.get('./static/templates/book.mst', function(response) {
+                document.querySelector('main').innerHTML = Mustache.render(response, {
+                    "book": {
+                        author: data.results[id].book_details[0].author,
+                        title: data.results[id].book_details[0].title,
+                        description: data.results[id].book_details[0].description,
+                        image: data.results[id].book_details[0].book_image,
+                        price: data.results[id].book_details[0].price,
+                        publisher: data.results[id].book_details[0].publisher,
+                        link: data.results[id].book_details[0].amazon_product_url
+                    }
+                });
+            });
+        },
+
+        'search': function() {
+
+            // Get books template from templates folder
+            var data = JSON.parse(localStorage.getItem('data'));
+
+            var GetTemplate = new HttpClient();
+            GetTemplate.get('./static/templates/search.mst', function(response) {
+                document.querySelector('main').innerHTML = Mustache.render(response);
+                document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                    if (e.keyCode == 13) {
+                        //window.location.assign(router.baseUrl + '#search/' + document.querySelector('#search-box').value);
+                        window.location.hash = '#search/' + document.querySelector('#search-box').value;
+                    }
+                });
+            });
+        },
+
+        'search/:query': function(query) {
+
+            // Get local storage items
+
+            var data = JSON.parse(localStorage.getItem('data'));
+            var laBoek = _.find(data.results, function(result) {
+                return (result.book_details[0].title === query);
+            });
+
+            var GetTemplate = new HttpClient();
+
+            if (laBoek) {
+
+                // Get books template from templates folder
+                GetTemplate.get('./static/templates/search-detail.mst', function(response) {
+                    document.querySelector('main').innerHTML = Mustache.render(response, {
+                        "book": {
+                            author: laBoek.book_details[0].author,
+                            title: laBoek.book_details[0].title,
+                            description: laBoek.book_details[0].description,
+                            image: laBoek.book_details[0].book_image,
+                            price: laBoek.book_details[0].price,
+                            publisher: laBoek.book_details[0].publisher,
+                            link: laBoek.book_details[0].amazon_product_url
+                        }
+                    });
+                    document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                        if (e.keyCode == 13) {
+                            window.location.hash = '#search/' + document.querySelector('#search-box').value;
+                        }
+                    });
+                });
+            } else {
+                GetTemplate.get('./static/templates/search.mst', function(response) {
+                    document.querySelector('main').innerHTML = Mustache.render(response);
+                    document.querySelector('#error').style.display = "block";
+                    document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                        if (e.keyCode == 13) {
+                            window.location.hash = '#search/' + document.querySelector('#search-box').value;
+                        }
+                    });
+                });
+            }
+
+        },
+
+        '': function() {
+
+            // Get home template from templates folder
+
+            var GetTemplate = new HttpClient();
+            GetTemplate.get('./static/templates/home.mst', function(response) {
+                document.querySelector('main').innerHTML = Mustache.render(response);
+            });
+        },
+
+        '*': function() {
+            alert("404 page not found.");
+        }
+
+    });
 
 })();
