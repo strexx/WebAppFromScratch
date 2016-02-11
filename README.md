@@ -22,4 +22,4 @@ Eveneens voor Single Page Web Applications (SPA's).
 
 #### Opdrachten 1 t/m 5
 -----------------------------------------
-* [Link naar opdrachten](https://strexx.github.io/WebAppFromScratch/week2/opdracht 1/index.html)
+* [Link naar opdrachten](https://strexx.github.io/WebAppFromScratch/week%202/opdracht%201/index.html)
