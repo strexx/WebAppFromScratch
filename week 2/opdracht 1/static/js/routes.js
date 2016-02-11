@@ -74,6 +74,7 @@
                 document.querySelector('main').innerHTML = Mustache.render(response);
                 document.querySelector('#search-box').addEventListener('keyup', function (e) {
                     if (e.keyCode == 13) {
+                        //window.location.assign(router.baseUrl + '#search/' + document.querySelector('#search-box').value);
                         window.location.hash = '#search/' + document.querySelector('#search-box').value;
                     }
                 });
@@ -87,13 +88,7 @@
                 GetTemplate = new HttpClient(),
                 laBoek = _.find(data.results, function (result) {
                     return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
-                }),
-                top5 = _.filter(data.results, function(result) {
-                     return result.rank < 6;
                 });
-
-                // Top 5 boeken op basis van ranking
-                console.log(top5);
 
             if (laBoek) {
 

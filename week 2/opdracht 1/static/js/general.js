@@ -54,8 +54,8 @@
 
             // Get all menu items
             var links = document.querySelectorAll('nav li'),
-                hash = window.location.hash.substring(1).split("/"),
-                link = document.querySelector("#" + hash[0]);
+                link = document.querySelector("#" + hash[0]),
+                hash = window.location.hash.substring(1).split("/");
 
             // Remove active class
 
