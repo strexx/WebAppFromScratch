@@ -94,7 +94,7 @@
 
             var data = JSON.parse(localStorage.getItem('data'));
             var laBoek = _.find(data.results, function(result) {
-                return (result.book_details[0].title === query);
+                return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
             });
 
             var GetTemplate = new HttpClient();
