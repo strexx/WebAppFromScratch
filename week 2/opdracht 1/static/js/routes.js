@@ -88,7 +88,13 @@
                 GetTemplate = new HttpClient(),
                 laBoek = _.find(data.results, function (result) {
                     return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
+                }),
+                top5 = _.filter(data.results, function(result) {
+                     return result.rank < 6;
                 });
+
+                // Top 5 boeken op basis van ranking
+                console.log(top5);
 
             if (laBoek) {
 
