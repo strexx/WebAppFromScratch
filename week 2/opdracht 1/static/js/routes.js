@@ -1,29 +1,23 @@
-(function() {
-
+(function () {
     "use strict";
-
-    var router = {
-        "baseUrl": "http://127.0.0.1:8080/"
-    }
 
     routie({
 
-        'home': function() {
+        'home': function () {
 
             // Get home template from templates folder
-
             var GetTemplate = new HttpClient();
-            GetTemplate.get('./static/templates/home.mst', function(response) {
+            GetTemplate.get('./static/templates/home.mst', function (response) {
                 document.querySelector('main').innerHTML = Mustache.render(response);
             });
         },
 
-        'books': function() {
+        'books': function () {
 
             // Get local storage items
-
-            var data = JSON.parse(localStorage.getItem('data'));
-            var booksArray = [];
+            var data = JSON.parse(localStorage.getItem('data')),
+                booksArray = [],
+                GetTemplate = new HttpClient();
 
             // Loop through data and get information
 
@@ -41,22 +35,21 @@
 
             // Get books template from templates folder
 
-            var GetTemplate = new HttpClient();
-            GetTemplate.get('./static/templates/books.mst', function(response) {
+
+            GetTemplate.get('./static/templates/books.mst', function (response) {
                 document.querySelector('main').innerHTML = Mustache.render(response, {
                     "books": booksArray
                 });
             });
         },
 
-        'books/:id': function(id) {
+        'books/:id': function (id) {
 
             // Get local storage items
+            var data = JSON.parse(localStorage.getItem('data')),
+                GetTemplate = new HttpClient();
 
-            var data = JSON.parse(localStorage.getItem('data'));
-
-            var GetTemplate = new HttpClient();
-            GetTemplate.get('./static/templates/book.mst', function(response) {
+            GetTemplate.get('./static/templates/book.mst', function (response) {
                 document.querySelector('main').innerHTML = Mustache.render(response, {
                     "book": {
                         author: data.results[id].book_details[0].author,
@@ -71,15 +64,15 @@
             });
         },
 
-        'search': function() {
+        'search': function () {
 
             // Get books template from templates folder
-            var data = JSON.parse(localStorage.getItem('data'));
+            var data = JSON.parse(localStorage.getItem('data')),
+                GetTemplate = new HttpClient();
 
-            var GetTemplate = new HttpClient();
-            GetTemplate.get('./static/templates/search.mst', function(response) {
+            GetTemplate.get('./static/templates/search.mst', function (response) {
                 document.querySelector('main').innerHTML = Mustache.render(response);
-                document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                document.querySelector('#search-box').addEventListener('keyup', function (e) {
                     if (e.keyCode == 13) {
                         //window.location.assign(router.baseUrl + '#search/' + document.querySelector('#search-box').value);
                         window.location.hash = '#search/' + document.querySelector('#search-box').value;
@@ -88,21 +81,19 @@
             });
         },
 
-        'search/:query': function(query) {
+        'search/:query': function (query) {
 
             // Get local storage items
-
-            var data = JSON.parse(localStorage.getItem('data'));
-            var laBoek = _.find(data.results, function(result) {
-                return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
-            });
-
-            var GetTemplate = new HttpClient();
+            var data = JSON.parse(localStorage.getItem('data')),
+                GetTemplate = new HttpClient(),
+                laBoek = _.find(data.results, function (result) {
+                    return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
+                });
 
             if (laBoek) {
 
                 // Get books template from templates folder
-                GetTemplate.get('./static/templates/search-detail.mst', function(response) {
+                GetTemplate.get('./static/templates/search-detail.mst', function (response) {
                     document.querySelector('main').innerHTML = Mustache.render(response, {
                         "book": {
                             author: laBoek.book_details[0].author,
@@ -114,17 +105,17 @@
                             link: laBoek.book_details[0].amazon_product_url
                         }
                     });
-                    document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                    document.querySelector('#search-box').addEventListener('keyup', function (e) {
                         if (e.keyCode == 13) {
                             window.location.hash = '#search/' + document.querySelector('#search-box').value;
                         }
                     });
                 });
             } else {
-                GetTemplate.get('./static/templates/search.mst', function(response) {
+                GetTemplate.get('./static/templates/search.mst', function (response) {
                     document.querySelector('main').innerHTML = Mustache.render(response);
                     document.querySelector('#error').style.display = "block";
-                    document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                    document.querySelector('#search-box').addEventListener('keyup', function (e) {
                         if (e.keyCode == 13) {
                             window.location.hash = '#search/' + document.querySelector('#search-box').value;
                         }
@@ -134,17 +125,17 @@
 
         },
 
-        '': function() {
+        '': function () {
 
             // Get home template from templates folder
-
             var GetTemplate = new HttpClient();
-            GetTemplate.get('./static/templates/home.mst', function(response) {
+
+            GetTemplate.get('./static/templates/home.mst', function (response) {
                 document.querySelector('main').innerHTML = Mustache.render(response);
             });
         },
 
-        '*': function() {
+        '*': function () {
             alert("404 page not found.");
         }
 
