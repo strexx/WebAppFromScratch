@@ -14,7 +14,7 @@
         init: function() {
 
             // Check if localstorage is set
-
+            //CASPER:  API is this?
             if (localStorage.getItem("data") === null) {
                 API.getData();
             } else {
@@ -27,6 +27,7 @@
             // Add active class to #home at first visit
 
             if (!window.location.hash) {
+                //CASPER: ik vind het mooier om alle HTML "vragen" aan het begin te doen, maar dat is compleet eigen smaak
                 document.querySelector("#home").classList.add("active");
             } else {
                 API.toggleClass();
@@ -66,13 +67,13 @@
                 link = document.querySelector("#" + hash[0]);
 
             // Remove active class
-
+            //CASPER: again, forEach
             for (var i = 0; i < links.length; i++) {
                 links[i].classList.remove("active");
             }
 
             // Add active class to new hash
-
+            //CASPER denk aan of je '' wil of ""
             link.classList.add("active");
         }
     };
