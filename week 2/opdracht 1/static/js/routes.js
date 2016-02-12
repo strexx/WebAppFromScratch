@@ -26,7 +26,7 @@
                 GetTemplate = new HttpClient();
 
             // Loop through data and get information
-
+            //CASPER: probeer elke for loop een forEach te maken
             for (var i = 0; i < data.results.length; i++) {
                 var books = {
                     id: i,
@@ -79,7 +79,7 @@
         'search': function() {
 
             // Get books template from templates folder
-
+            //CASPER: var met hoofdletter ?
             var data = JSON.parse(localStorage.getItem('data')),
                 GetTemplate = new HttpClient();
 
@@ -87,6 +87,7 @@
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response);
                     document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                        //CASPER: comment even welke key dit is
                         if (e.keyCode == 13) {
                             //window.location.assign(router.baseUrl + '#search/' + document.querySelector('#search-box').value);
                             window.location.hash = '#search/' + document.querySelector('#search-box').value;
@@ -163,7 +164,7 @@
             // Get home template from templates folder
 
             var GetTemplate = new HttpClient();
-
+            //CASPER: ik vind het persoonlijk mooier als je .then op de volgende regel doet dat je .catch ook op de volgende zet
             GetTemplate.get('./static/templates/home.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response);
