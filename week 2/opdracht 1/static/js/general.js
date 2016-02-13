@@ -1,4 +1,4 @@
-(function() {
+(function() { // NETJES FONSIE!
     "use strict";
 
     var config = {
