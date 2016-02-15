@@ -14,7 +14,8 @@
         init: function() {
 
             // Check if localstorage is set
-
+            
+            //waarom gebruik je hier dubbele quotes en later maar een?
             if (localStorage.getItem("data") === null) {
                 this.getData();
             } else {
