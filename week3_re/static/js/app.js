@@ -38,13 +38,13 @@ var APP = APP || {};
 		        	APP.render.books();
 		        },
 		        'books/:id': function(id) {
-		        	APP.render.books();
+		        	APP.render.books(id);
 		        },
 		        'search': function() {
 		        	APP.render.search();
 		        },
 		        'search/:query': function(query) {
-		        	APP.render.search();
+		        	APP.render.search(query);
 		        },
 		        '': function() {
 		        	APP.render.home();
@@ -234,7 +234,7 @@ var APP = APP || {};
                 });
     	},
 
-    	'books': function() {
+    	'books': function(id) {
 
     		// Get localstorage &
 
@@ -242,42 +242,9 @@ var APP = APP || {};
     			booksArray = [],
             	template = new HttpClient();
 
-            // Loop through data and get information
 
-            data.results.forEach(function(book, index) {
-                var books = {
-                    id: index,
-                    author: book.book_details[0].author,
-                    title: book.book_details[0].title,
-                    description: book.book_details[0].description,
-                    image: book.book_details[0].book_image,
-                    price: book.book_details[0].price,
-                };
-                booksArray.push(books);
-            });
-
-            // Get books template from templates folder
-
-            template.get('./static/templates/books.mst')
-                .then(response => {
-                    document.querySelector('main').innerHTML = Mustache.render(response, {
-                        "books": booksArray
-                    });
-                })
-                .catch(e => {
-                    console.error(e);
-                });
-
-    	},
-
-    	'books/:id': function(id) {
-
-            // Get local storage items
-
-            var data = APP.get.localStorage(),
-            	template = new HttpClient();
-
-            template.get('./static/templates/book.mst')
+            if(id) {
+            	template.get('./static/templates/book.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response, {
                         "book": {
@@ -294,21 +261,103 @@ var APP = APP || {};
                 .catch(e => {
                     console.error(e);
                 });
-        },
+            } else {
 
-        'search': function() {
+	            // Loop through data and get information
 
-            // Get books template from templates folder
+	            data.results.forEach(function(book, index) {
+	                var books = {
+	                    id: index,
+	                    author: book.book_details[0].author,
+	                    title: book.book_details[0].title,
+	                    description: book.book_details[0].description,
+	                    image: book.book_details[0].book_image,
+	                    price: book.book_details[0].price,
+	                };
+	                booksArray.push(books);
+	            });
+
+	            // Get books template from templates folder
+
+	            template.get('./static/templates/books.mst')
+	                .then(response => {
+	                    document.querySelector('main').innerHTML = Mustache.render(response, {
+	                        "books": booksArray
+	                    });
+	                })
+	                .catch(e => {
+	                    console.error(e);
+	                });
+	        }
+
+    	},
+
+        'search': function(query) {
+
+            // Get local storage items
 
             var data = APP.get.localStorage(),
             	template = new HttpClient();
 
-            template.get('./static/templates/search.mst')
+            if(query) {
+
+            	var laBoek = _.find(data.results, function(result) {
+                    return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
+                }),
+                top5 = _.filter(data.results, function(result) {
+                    return result.rank < 6;
+                });
+
+                if (laBoek) {
+
+	                // Get search-detail template from templates folder
+
+	                template.get('./static/templates/search-detail.mst')
+	                    .then(response => {
+	                        document.querySelector('main').innerHTML = Mustache.render(response, {
+	                            "book": {
+	                                author: laBoek.book_details[0].author,
+	                                title: laBoek.book_details[0].title,
+	                                description: laBoek.book_details[0].description,
+	                                image: laBoek.book_details[0].book_image,
+	                                price: laBoek.book_details[0].price,
+	                                publisher: laBoek.book_details[0].publisher,
+	                                link: laBoek.book_details[0].amazon_product_url
+	                            }
+	                        });
+	                        document.querySelector('#search-box').addEventListener('keyup', function(e) {
+	                            if (e.keyCode == 13) {
+	                                window.location.hash = '#search/' + document.querySelector('#search-box').value;
+	                            }
+	                        });
+	                    })
+	                    .catch(e => {
+	                        console.error(e);
+	                    });
+            	} else {
+
+	                // Get search template from templates folder
+
+	                template.get('./static/templates/search.mst')
+	                    .then(response => {
+	                        document.querySelector('main').innerHTML = Mustache.render(response);
+	                        document.querySelector('#error').style.display = "block";
+	                        document.querySelector('#search-box').addEventListener('keyup', function(e) {
+	                            if (e.keyCode == 13) {
+	                                window.location.hash = '#search/' + document.querySelector('#search-box').value;
+	                            }
+	                        });
+	                    })
+	                    .catch(e => {
+	                        console.error(e);
+	                    });
+            	}
+            } else {
+            	template.get('./static/templates/search.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response);
                     document.querySelector('#search-box').addEventListener('keyup', function(e) {
                         if (e.keyCode == 13) {
-                            //window.location.assign(router.baseUrl + '#search/' + document.querySelector('#search-box').value);
                             window.location.hash = '#search/' + document.querySelector('#search-box').value;
                         }
                     });
@@ -316,66 +365,7 @@ var APP = APP || {};
                 .catch(e => {
                     console.error(e);
                 });
-        },
-
-        'search/:query': function(query) {
-
-            // Get local storage items
-
-            var data = APP.get.localStorage(),
-            	template = new HttpClient(),
-                laBoek = _.find(data.results, function(result) {
-                    return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
-                }),
-                top5 = _.filter(data.results, function(result) {
-                    return result.rank < 6;
-                });
-
-            if (laBoek) {
-
-                // Get search-detail template from templates folder
-
-                template.get('./static/templates/search-detail.mst')
-                    .then(response => {
-                        document.querySelector('main').innerHTML = Mustache.render(response, {
-                            "book": {
-                                author: laBoek.book_details[0].author,
-                                title: laBoek.book_details[0].title,
-                                description: laBoek.book_details[0].description,
-                                image: laBoek.book_details[0].book_image,
-                                price: laBoek.book_details[0].price,
-                                publisher: laBoek.book_details[0].publisher,
-                                link: laBoek.book_details[0].amazon_product_url
-                            }
-                        });
-                        document.querySelector('#search-box').addEventListener('keyup', function(e) {
-                            if (e.keyCode == 13) {
-                                window.location.hash = '#search/' + document.querySelector('#search-box').value;
-                            }
-                        });
-                    })
-                    .catch(e => {
-                        console.error(e);
-                    });
-            } else {
-
-                // Get search template from templates folder
-
-                template.get('./static/templates/search.mst')
-                    .then(response => {
-                        document.querySelector('main').innerHTML = Mustache.render(response);
-                        document.querySelector('#error').style.display = "block";
-                        document.querySelector('#search-box').addEventListener('keyup', function(e) {
-                            if (e.keyCode == 13) {
-                                window.location.hash = '#search/' + document.querySelector('#search-box').value;
-                            }
-                        });
-                    })
-                    .catch(e => {
-                        console.error(e);
-                    });
             }
-
         }
     }
 
