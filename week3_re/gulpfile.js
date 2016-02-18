@@ -1,21 +1,34 @@
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-var concat = require('gulp-concat');
+// Load plugins
+var gulp = require('gulp'),
+    babel = require('gulp-babel'),
+    uglify = require('gulp-uglify'),
+    concat = require('gulp-concat'),
+    notify = require('gulp-notify'),
+    cssnano = require('gulp-cssnano');
 
-gulp.task('default', ['combineJS', 'combineCSS']);
+// Styles
+gulp.task('styles', function (cb) {
+    gulp.src(['./static/css/style.css', './static/css/pull-refresh.css'])
+        .pipe(concat('main.css'))
+        .pipe(cssnano())
+        .pipe(gulp.dest('dist/css/'))
+});
 
-// takes in a callback so the engine knows when it'll be done
-gulp.task('combineJS', function (cb) {
-    gulp.src(['./node_modules/mustache/mustache.min.js', './node_modules/underscore/underscore-min.js', './static/js/client.js', './static/js/general.js', './static/lib/routie.js', './static/js/routes.js', './static/lib/hammer.2.0.4.js', './static/lib/wptr.1.1.js', './static/js/pull-refresh.js'])
+// Scripts
+gulp.task('scripts', function (cb) {
+    gulp.src(['./static/modules/app_start.js', './static/modules/app_init.js', './static/modules/app_router.js', './static/modules/app_get.js', './static/modules/app_render.js', './static/modules/app_end.js'])
         .pipe(concat('all.js'))
         .pipe(babel({
             presets: ['es2015']
         }))
-        .pipe(gulp.dest('./static/dist/js/'))
+        .pipe(uglify())
+        .pipe(gulp.dest('dist/js/'))
+        .pipe(notify({
+            message: 'Scripts task complete'
+        }));
 });
 
-gulp.task('combineCSS', function (cb) {
-    gulp.src(['./static/css/style.css', './static/css/pull-refresh.css'])
-        .pipe(concat('main.css'))
-        .pipe(gulp.dest('./static/dist/css/'))
+// Default task
+gulp.task('default', function () {
+    gulp.start('styles', 'scripts');
 });

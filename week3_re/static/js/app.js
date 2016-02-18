@@ -202,10 +202,6 @@ var APP = APP || {};
                                     // Open an get request
                                     request.open('GET', './static/templates/books.mst');
 
-                                    request.onloadstart = function() {
-                                        document.querySelector('#content').classList.remove('grow');
-                                    }
-
                                     // If the request is done
                                     request.onload = function() {
                                         
@@ -214,10 +210,7 @@ var APP = APP || {};
                                             document.querySelector('#content').innerHTML = Mustache.render(request.response, {
                                                 "books": booksArray
                                             });
-                                            document.querySelector('#content').classList.add('grow');
-                                        } else {                                        
-                                            alert("Error");
-                                        }
+                                        }                                        
                                     };
                                     
                                     // Send the request
