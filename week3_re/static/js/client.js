@@ -10,20 +10,11 @@ var HttpClient = function() { // this is a constructor
             // Open an get request
             request.open('GET', url);
 
-            request.onloadstart = function () {            
-
-                // Toggle animation
-                document.querySelector('main').classList.remove('grow');
-
-            };
-
             // If the request is done
             request.onload = function() {
                 
                 // Only if request is done
-                if (request.status == 200) {
-                    
-                    document.querySelector('main').classList.add('grow');
+                if (request.status == 200) {                
                     
                     // Send text form request
                     resolve(request.responseText);

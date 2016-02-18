@@ -1,8 +1,8 @@
-<div id="error">Geen zoekresultaten gevonden</div>
+<div id="error" class="grow">Geen zoekresultaten gevonden</div>
 
-<input type="text" id="search-box" placeholder="Zoek naar een boek" />
+<input type="text" class="grow" id="search-box" placeholder="Zoek naar een boek" />
 
-<section id="book-detail">
+<section id="book-detail" class="grow">
     <header>
         <h2>{{ book.title }}</h2>
     </header>

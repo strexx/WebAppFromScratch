@@ -1,4 +1,4 @@
-<section id="book-detail">
+<section id="book-detail" class="grow">
     <header>
         <h2>{{ book.title }}</h2>
     </header>
