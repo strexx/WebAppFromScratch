@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
 // Styles
 gulp.task('styles', function (cb) {
-    gulp.src(['./static/css/style.css', './static/css/pull-refresh.css'])
+    gulp.src(['./static/css/style.css', './static/css/pull-refresh.css', './static/lib/genericons/genericons.css', './static/css/awesomplete.css'])
         .pipe(concat('main.css'))
         .pipe(cssnano())
         .pipe(gulp.dest('./static/dist/css/'))
