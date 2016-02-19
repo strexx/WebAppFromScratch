@@ -15,26 +15,26 @@ body > header {
 header h1 {
     padding-left: .5em;
 }
-header nav {
-    padding-right: 1em;
-}
+
 header h1 a {
     font-size: 1.5em;
     text-decoration: none;
 }
 nav ul {
-	    display: flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
+    margin-left: -1.4em;
 }
 nav ul li {
     padding: 0;
+    margin: 0;
 }
 nav ul li.active {
     text-decoration: underline;
 }
 nav ul a {
-    padding: .1em 1em;
+    margin-right: 1em;
     text-decoration: none;
 }
 main {
@@ -90,6 +90,7 @@ main {
     text-align: center;
     cursor: default;
     margin: 1em;
+    height: 100%;
 }
 .hovereffect .overlay {
     width: 100%;
@@ -164,13 +165,17 @@ main {
     transition-delay: .2s;
 }
 
+#searchBox {    
+    padding: 0.5em;
+}
 
 input[type="text"] {
-    padding: 1em !important;
-    width: 100%;
     color: grey;
     font-size: 1em;
-    margin-bottom: 2em;
+    width: 100%;
+    margin: 0; border: 0;
+    padding: 1.2em 0 1.2em 0.5em;
+    display: block;
 }
 
 /*
@@ -206,8 +211,15 @@ input[type="text"] {
 
 footer {
     width: 100%;
+    margin-bottom: 1em;
     color: hsl(233, 42%, 10%);
 }
 footer p {
     text-align: center;
+}
+
+@media (min-width: 27.875em) {
+    nav ul {
+        margin: 0;
+    }
 }
