@@ -7,12 +7,13 @@
 
             // Get home template from templates folder
 
-            var GetTemplate = new HttpClient();
+            var template = new HttpClient();
 
-            GetTemplate.get('./static/templates/home.mst')
+            template.get('./static/templates/home.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response);
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.error(e);
                 });
         },
@@ -23,30 +24,31 @@
 
             var data = JSON.parse(localStorage.getItem('data')),
                 booksArray = [],
-                GetTemplate = new HttpClient();
+                template = new HttpClient();
 
             // Loop through data and get information
 
-            for (var i = 0; i < data.results.length; i++) {
+            data.results.forEach(function(book, index) {
                 var books = {
-                    id: i,
-                    author: data.results[i].book_details[0].author,
-                    title: data.results[i].book_details[0].title,
-                    description: data.results[i].book_details[0].description,
-                    image: data.results[i].book_details[0].book_image,
-                    price: data.results[i].book_details[0].price,
+                    id: index,
+                    author: book.book_details[0].author,
+                    title: book.book_details[0].title,
+                    description: book.book_details[0].description,
+                    image: book.book_details[0].book_image,
+                    price: book.book_details[0].price,
                 };
                 booksArray.push(books);
-            }
+            });
 
             // Get books template from templates folder
 
-            GetTemplate.get('./static/templates/books.mst')
+            template.get('./static/templates/books.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response, {
                         "books": booksArray
                     });
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.error(e);
                 });
         },
@@ -56,9 +58,9 @@
             // Get local storage items
 
             var data = JSON.parse(localStorage.getItem('data')),
-                GetTemplate = new HttpClient();
+                template = new HttpClient();
 
-            GetTemplate.get('./static/templates/book.mst')
+            template.get('./static/templates/book.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response, {
                         "book": {
@@ -71,7 +73,8 @@
                             link: data.results[id].book_details[0].amazon_product_url
                         }
                     });
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.error(e);
                 });
         },
@@ -81,9 +84,9 @@
             // Get books template from templates folder
 
             var data = JSON.parse(localStorage.getItem('data')),
-                GetTemplate = new HttpClient();
+                template = new HttpClient();
 
-            GetTemplate.get('./static/templates/search.mst')
+            template.get('./static/templates/search.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response);
                     document.querySelector('#search-box').addEventListener('keyup', function(e) {
@@ -92,7 +95,8 @@
                             window.location.hash = '#search/' + document.querySelector('#search-box').value;
                         }
                     });
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.error(e);
                 });
         },
@@ -102,7 +106,7 @@
             // Get local storage items
 
             var data = JSON.parse(localStorage.getItem('data')),
-                GetTemplate = new HttpClient(),
+                template = new HttpClient(),
                 laBoek = _.find(data.results, function(result) {
                     return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
                 }),
@@ -117,7 +121,7 @@
 
                 // Get search-detail template from templates folder
 
-                GetTemplate.get('./static/templates/search-detail.mst')
+                template.get('./static/templates/search-detail.mst')
                     .then(response => {
                         document.querySelector('main').innerHTML = Mustache.render(response, {
                             "book": {
@@ -135,14 +139,15 @@
                                 window.location.hash = '#search/' + document.querySelector('#search-box').value;
                             }
                         });
-                    }).catch(e => {
+                    })
+                    .catch(e => {
                         console.error(e);
                     });
             } else {
 
                 // Get search template from templates folder
 
-                GetTemplate.get('./static/templates/search.mst')
+                template.get('./static/templates/search.mst')
                     .then(response => {
                         document.querySelector('main').innerHTML = Mustache.render(response);
                         document.querySelector('#error').style.display = "block";
@@ -151,7 +156,8 @@
                                 window.location.hash = '#search/' + document.querySelector('#search-box').value;
                             }
                         });
-                    }).catch(e => {
+                    })
+                    .catch(e => {
                         console.error(e);
                     });
             }
@@ -162,12 +168,13 @@
 
             // Get home template from templates folder
 
-            var GetTemplate = new HttpClient();
+            var template = new HttpClient();
 
-            GetTemplate.get('./static/templates/home.mst')
+            template.get('./static/templates/home.mst')
                 .then(response => {
                     document.querySelector('main').innerHTML = Mustache.render(response);
-                }).catch(e => {
+                })
+                .catch(e => {
                     console.error(e);
                 });
         },

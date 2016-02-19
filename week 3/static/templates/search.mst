@@ -1,0 +1,2 @@
+<div id="error">Geen zoekresultaten gevonden</div>
+<input type="text" id="search-box" name="search" placeholder="Zoek naar een boek">
