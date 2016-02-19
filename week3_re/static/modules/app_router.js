@@ -38,15 +38,15 @@ APP.router = (function () {
         if (!window.location.hash) {
             document.querySelector('#home').classList.add('active');
         } else {
-            this.toggleMenu();
+            toggleMenu();
         }
 
-        // If hash changes toggleClass
+        // If hash changes toggleMenu
 
-        window.onhashchange = this.toggleMenu;
+        window.addEventListener("hashchange", toggleMenu, false);
     };
 
-    function _toggleMenu() {
+    function toggleMenu() {
 
         // Get all menu items
 
@@ -71,7 +71,8 @@ APP.router = (function () {
     };
 
     return {
-    	init: init
+    	init: init,
+        toggleMenu: toggleMenu
 	};
 
 })();

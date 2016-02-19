@@ -4,18 +4,15 @@
 
 APP.get = (function () {
 
-	settings: {
+	var settings = {
         "apiKey": "9db42680b12e928d7f15d264928414ab:16:74324547",
         "url": "http://api.nytimes.com/svc/books/v2/lists/2010-10-01/trade-fiction-paperback.json?api-key=",
         "fullUrl": function() {
             return this.url + this.apiKey;
         }   
-    };
+    };    
 
 	function data() {
-
-		// Store settings
-		var s = this.settings;	
 
 		// Check if localstorage is set
 
@@ -25,7 +22,7 @@ APP.get = (function () {
 
             // Get API data
             
-            nyClient.get(s.fullUrl())
+            nyClient.get(settings.fullUrl())
 	            .then(response => {
 	                localStorage.setItem('data', response);
 	            })
@@ -33,17 +30,17 @@ APP.get = (function () {
 	                console.error(e);
 	            });
         } else {
-        	this.localStorage();
+        	localData();
         }
 	};
 
-	function localStorage() {
+	function localData() {
 		return JSON.parse(localStorage.getItem('data'));    	
 	};
 
 	return {
         data: data,
-        localStorage: localStorage
+        localData: localData
 	};
 
 })();

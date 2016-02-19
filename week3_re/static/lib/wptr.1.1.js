@@ -13,7 +13,7 @@ var WebPullToRefresh = (function () {
 		ptrEl: 'ptr', 
 
 		// Number of pixels of panning until refresh 
-		distanceToRefresh: 70, 
+		distanceToRefresh: 10, 
 
 		// Pointer to function that does the loading and returns a promise
 		loadingFunction: false,

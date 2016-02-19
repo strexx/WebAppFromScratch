@@ -6,10 +6,10 @@ APP.render = (function () {
 
 	function home() {
 
-		// Get localstorage &
+		// Get localData &
 		// Get home template from templates folder
 
-		var data = APP.get.localStorage(),
+		var data = APP.get.localData(),
         	template = new HttpClient();
 
         template.get('./static/templates/home.mst')
@@ -23,10 +23,10 @@ APP.render = (function () {
 
 	function pullrefresh() {
 
-		// Get localstorage &
+		// Get localData &
 		// Get pull refresh template from templates folder
 
-		var data = APP.get.localStorage(),
+		var data = APP.get.localData(),
             booksArray = [],
             template = new HttpClient();
 
@@ -47,7 +47,8 @@ APP.render = (function () {
         // Get pull refresh template from templates folder
 
         template.get('./static/templates/pullrefresh.mst')
-            .then(response => {        
+            .then(response => {
+                document.querySelector('main').style.overflow = "hidden";
                 document.querySelector('main').innerHTML = Mustache.render(response);
                 
                 // Pull to refresh function                                        
@@ -68,10 +69,13 @@ APP.render = (function () {
                                     
                                     // Only if request is done
                                     if (request.status == 200) {
-                                        document.querySelector('#content').innerHTML = Mustache.render(request.response, {
+                                        setTimeout(function() {
+                                            document.querySelector('#content').innerHTML = Mustache.render(request.response, {
                                             "books": booksArray
-                                        });
-                                    }                                        
+                                            })
+                                        }, 800);
+                                    }
+                                    resolve();                                  
                                 };
                                 
                                 // Send the request
@@ -90,9 +94,9 @@ APP.render = (function () {
 
 	function books(id) {
 
-		// Get localstorage &
+		// Get localData &
 
-		var data = APP.get.localStorage(),
+		var data = APP.get.localData(),
 			booksArray = [],
         	template = new HttpClient();
 
@@ -149,8 +153,21 @@ APP.render = (function () {
 
         // Get local storage items
 
-        var data = APP.get.localStorage(),
-        	template = new HttpClient();
+        var data = APP.get.localData(),
+        	template = new HttpClient(),
+            bookNames = [];
+
+        // Loop through data and get title information for autocomplete
+
+        data.results.forEach(function(book, index) {
+            var booksNamesObj = {
+                id: index,
+                title: book.book_details[0].title,
+            };
+            bookNames.push(book.book_details[0].title.toLowerCase());
+        });
+
+        // Check if there is a search query
 
         if(query) {
 
@@ -161,12 +178,15 @@ APP.render = (function () {
                 return result.rank < 6;
             });
 
+            // Check if its a detail page
+
             if (laBoek) {
 
                 // Get search-detail template from templates folder
 
                 template.get('./static/templates/search-detail.mst')
                     .then(response => {
+                        document.querySelector('main').style.height = "100%";
                         document.querySelector('main').innerHTML = Mustache.render(response, {
                             "book": {
                                 author: laBoek.book_details[0].author,
@@ -179,9 +199,14 @@ APP.render = (function () {
                             }
                         });
                         document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                            // If ENTER is pressed
                             if (e.keyCode == 13) {
                                 window.location.hash = '#search/' + document.querySelector('#search-box').value;
                             }
+                        });
+
+                        new Awesomplete(document.querySelector('#search-box'), {
+                            list: bookNames
                         });
                     })
                     .catch(e => {
@@ -193,27 +218,44 @@ APP.render = (function () {
 
                 template.get('./static/templates/search.mst')
                     .then(response => {
+                        document.querySelector('main').style.height = "100%";
                         document.querySelector('main').innerHTML = Mustache.render(response);
                         document.querySelector('#error').style.display = "block";
                         document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                            // If ENTER is pressed
                             if (e.keyCode == 13) {
                                 window.location.hash = '#search/' + document.querySelector('#search-box').value;
                             }
+                        });
+
+                        new Awesomplete(document.querySelector('#search-box'), {
+                            list: bookNames
                         });
                     })
                     .catch(e => {
                         console.error(e);
                     });
         	}
+
+        // If no search query is posted, render default search template
+
         } else {
         	template.get('./static/templates/search.mst')
             .then(response => {
+                document.querySelector('main').style.height = "100%";
                 document.querySelector('main').innerHTML = Mustache.render(response);
-                document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                document.querySelector('#search-box').addEventListener('keyup', function(e) {                
+
+                    // If ENTER is pressed
                     if (e.keyCode == 13) {
                         window.location.hash = '#search/' + document.querySelector('#search-box').value;
                     }
                 });
+
+                new Awesomplete(document.querySelector('#search-box'), {
+                    list: bookNames
+                });
+
             })
             .catch(e => {
                 console.error(e);

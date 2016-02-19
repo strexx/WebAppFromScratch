@@ -110,6 +110,7 @@ html, body {
     color: #fff;
     box-sizing: border-box;
     cursor: pointer;
+    overflow: hidden;
 }
 
 #content > p {
