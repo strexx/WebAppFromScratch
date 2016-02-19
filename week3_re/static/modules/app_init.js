@@ -3,10 +3,12 @@
 *******************/
 
 APP.start = (function () {
+    function init() {
+        APP.router.init();
+        APP.get.data();
+    }
+
     return {
-        init: function () {
-            APP.router.init();
-            APP.get.data();
-        }
+        init: init
     };
 })();
