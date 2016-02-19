@@ -29,8 +29,17 @@ APP.router = (function () {
 	        	APP.render.home();
 	        },
 	        '*': function() {
-        		alert("404 page not found.");
-    		}
+
+                var template = new HttpClient();
+
+                template.get('./static/templates/404.mst')
+                    .then(response => {
+                        document.querySelector('body').innerHTML = Mustache.render(response);
+                    })
+                    .catch(e => {
+                        console.error(e);
+                    });
+            		}
 	    });
 
     	// Add active class to #home at first visit
