@@ -4,35 +4,35 @@
 
 APP.render = (function () {
 
-	function home() {
+    // Private vars
 
-		// Get localData &
-		// Get home template from templates folder
+    var _main = document.querySelector('main'),
+        _template = new HttpClient(),
+        _data = APP.get.localData();
 
-		var data = APP.get.localData(),
-        	template = new HttpClient();
+    function home() {
+        
+        // Get home template from templates folder
 
-        template.get('./static/templates/home.mst')
-            .then(response => {            
-                document.querySelector('main').innerHTML = Mustache.render(response);
+        _template.get('./static/templates/home.mst')
+            .then(response => {
+                _main.innerHTML = Mustache.render(response);
             })
             .catch(e => {
                 console.error(e);
             });
-	};
+    };
 
-	function pullrefresh() {
+    function pullrefresh() {
 
-		// Get localData &
-		// Get pull refresh template from templates folder
+        // Get localData &
+        // Get pull refresh template from templates folder
 
-		var data = APP.get.localData(),
-            booksArray = [],
-            template = new HttpClient();
+        var booksArray = [];
 
-		// Loop through data and get information
+        // Loop through data and get information
 
-        data.results.forEach(function(book, index) {
+        _data.results.forEach(function (book, index) {
             var books = {
                 id: Math.floor(Math.random() * 10) + 1,
                 author: book.book_details[0].author,
@@ -46,42 +46,42 @@ APP.render = (function () {
 
         // Get pull refresh template from templates folder
 
-        template.get('./static/templates/pullrefresh.mst')
+        _template.get('./static/templates/pullrefresh.mst')
             .then(response => {
-                document.querySelector('main').style.overflow = "hidden";
-                document.querySelector('main').innerHTML = Mustache.render(response);
-                
-                // Pull to refresh function                                        
+                _main.style.overflow = "hidden";
+                _main.innerHTML = Mustache.render(response);
+
+                // Pull to refresh function
 
                 WebPullToRefresh.init({
-                    loadingFunction: function() {
-                        return new Promise(function(resolve, reject) {
-                            // Run some async loading code here                                
-                            if(1 === 1) {
-                                
+                    loadingFunction: function () {
+                        return new Promise(function (resolve, reject) {
+                            // Run some async loading code here
+                            if (1 === 1) {
+
                                 var request = new XMLHttpRequest();
-        
+
                                 // Open an get request
                                 request.open('GET', './static/templates/books.mst');
 
                                 // If the request is done
-                                request.onload = function() {
-                                    
+                                request.onload = function () {
+
                                     // Only if request is done
                                     if (request.status == 200) {
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             document.querySelector('#content').innerHTML = Mustache.render(request.response, {
-                                            "books": booksArray
+                                                "books": booksArray
                                             })
                                         }, 800);
                                     }
-                                    resolve();                                  
+                                    resolve();
                                 };
-                                
+
                                 // Send the request
                                 request.send();
                             } else {
-                              reject();
+                                reject();
                             }
                         });
                     }
@@ -90,39 +90,36 @@ APP.render = (function () {
             .catch(e => {
                 console.error(e);
             });
-	};
+    };
 
-	function books(id) {
+    function books(id) {
 
-		// Get localData &
+        // Get localData &
 
-		var data = APP.get.localData(),
-			booksArray = [],
-        	template = new HttpClient();
+        var booksArray = [];
 
-        if(id) {
-        	template.get('./static/templates/book.mst')
-            .then(response => {
-                document.querySelector('main').innerHTML = Mustache.render(response, {
-                    "book": {
-                        author: data.results[id].book_details[0].author,
-                        title: data.results[id].book_details[0].title,
-                        description: data.results[id].book_details[0].description,
-                        image: data.results[id].book_details[0].book_image,
-                        price: data.results[id].book_details[0].price,
-                        publisher: data.results[id].book_details[0].publisher,
-                        link: data.results[id].book_details[0].amazon_product_url
-                    }
+        if (id) {
+            _template.get('./static/templates/book.mst')
+                .then(response => {
+                    _main.innerHTML = Mustache.render(response, {
+                        "book": {
+                            author: _data.results[id].book_details[0].author,
+                            title: _data.results[id].book_details[0].title,
+                            description: _data.results[id].book_details[0].description,
+                            image: _data.results[id].book_details[0].book_image,
+                            price: _data.results[id].book_details[0].price,
+                            publisher: _data.results[id].book_details[0].publisher,
+                            link: _data.results[id].book_details[0].amazon_product_url
+                        }
+                    });
+                })
+                .catch(e => {
+                    console.error(e);
                 });
-            })
-            .catch(e => {
-                console.error(e);
-            });
         } else {
 
             // Loop through data and get information
-
-            data.results.forEach(function(book, index) {
+            _data.results.forEach(function (book, index) {
                 var books = {
                     id: index,
                     author: book.book_details[0].author,
@@ -135,10 +132,9 @@ APP.render = (function () {
             });
 
             // Get books template from templates folder
-
-            template.get('./static/templates/books.mst')
+            _template.get('./static/templates/books.mst')
                 .then(response => {
-                    document.querySelector('main').innerHTML = Mustache.render(response, {
+                    _main.innerHTML = Mustache.render(response, {
                         "books": booksArray
                     });
                 })
@@ -147,19 +143,15 @@ APP.render = (function () {
                 });
         }
 
-	};
+    };
 
     function search(query) {
 
         // Get local storage items
-
-        var data = APP.get.localData(),
-        	template = new HttpClient(),
-            bookNames = [];
+        var bookNames = [];
 
         // Loop through data and get title information for autocomplete
-
-        data.results.forEach(function(book, index) {
+        _data.results.forEach(function (book, index) {
             var booksNamesObj = {
                 id: index,
                 title: book.book_details[0].title,
@@ -169,14 +161,13 @@ APP.render = (function () {
 
         // Check if there is a search query
 
-        if(query) {
-
-        	var laBoek = _.find(data.results, function(result) {
-                return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
-            }),
-            top5 = _.filter(data.results, function(result) {
-                return result.rank < 6;
-            });
+        if (query) {
+            var laBoek = _.find(_data.results, function (result) {
+                    return (result.book_details[0].title.toLowerCase() === query.toLowerCase());
+                }),
+                top5 = _.filter(_data.results, function (result) {
+                    return result.rank < 6;
+                });
 
             // Check if its a detail page
 
@@ -184,10 +175,10 @@ APP.render = (function () {
 
                 // Get search-detail template from templates folder
 
-                template.get('./static/templates/search-detail.mst')
+                _template.get('./static/templates/search-detail.mst')
                     .then(response => {
-                        document.querySelector('main').style.height = "100%";
-                        document.querySelector('main').innerHTML = Mustache.render(response, {
+                        _main.classList.add("fullheight");
+                        _main.innerHTML = Mustache.render(response, {
                             "book": {
                                 author: laBoek.book_details[0].author,
                                 title: laBoek.book_details[0].title,
@@ -198,68 +189,76 @@ APP.render = (function () {
                                 link: laBoek.book_details[0].amazon_product_url
                             }
                         });
-                        document.querySelector('#search-box').addEventListener('keyup', function(e) {
+
+                        var searchBox = document.querySelector('#search-box');
+
+                        searchBox.addEventListener('keyup', function (e) {
                             // If ENTER is pressed
                             if (e.keyCode == 13) {
-                                window.location.hash = '#search/' + document.querySelector('#search-box').value;
+                                window.location.hash = '#search/' + searchBox.value;
                             }
                         });
 
-                        new Awesomplete(document.querySelector('#search-box'), {
+                        new Awesomplete(searchBox, {
                             list: bookNames
                         });
                     })
                     .catch(e => {
                         console.error(e);
                     });
-        	} else {
+            } else {
 
                 // Get search template from templates folder
 
-                template.get('./static/templates/search.mst')
+                _template.get('./static/templates/search.mst')
                     .then(response => {
-                        document.querySelector('main').style.height = "100%";
-                        document.querySelector('main').innerHTML = Mustache.render(response);
-                        document.querySelector('#error').style.display = "block";
-                        document.querySelector('#search-box').addEventListener('keyup', function(e) {
+                        _main.classList.add("fullheight");
+                        _main.innerHTML = Mustache.render(response);
+                        
+                        var errorMsg = document.querySelector('#error'),
+                            searchBox = document.querySelector('#search-box');
+
+                        errorMsg.classList.add("is-visible");
+                        searchBox.addEventListener('keyup', function (e) {
                             // If ENTER is pressed
                             if (e.keyCode == 13) {
-                                window.location.hash = '#search/' + document.querySelector('#search-box').value;
+                                window.location.hash = '#search/' + searchBox.value;
                             }
                         });
 
-                        new Awesomplete(document.querySelector('#search-box'), {
+                        new Awesomplete(searchBox, {
                             list: bookNames
                         });
                     })
                     .catch(e => {
                         console.error(e);
                     });
-        	}
+            }
 
-        // If no search query is posted, render default search template
+            // If no search query is posted, render default search template
 
         } else {
-        	template.get('./static/templates/search.mst')
-            .then(response => {
-                document.querySelector('main').style.height = "100%";
-                document.querySelector('main').innerHTML = Mustache.render(response);
-                document.querySelector('#search-box').addEventListener('keyup', function(e) {                
+            _template.get('./static/templates/search.mst')
+                .then(response => {
+                    _main.classList.add("fullheight");
+                    _main.innerHTML = Mustache.render(response);
+                    var searchBox = document.querySelector('#search-box');
+                    searchBox.addEventListener('keyup', function (e) {
 
-                    // If ENTER is pressed
-                    if (e.keyCode == 13) {
-                        window.location.hash = '#search/' + document.querySelector('#search-box').value;
-                    }
+                        // If ENTER is pressed
+                        if (e.keyCode == 13) {
+                            window.location.hash = '#search/' + searchBox.value;
+                        }
+                    });
+
+                    new Awesomplete(searchBox, {
+                        list: bookNames
+                    });
+
+                })
+                .catch(e => {
+                    console.error(e);
                 });
-
-                new Awesomplete(document.querySelector('#search-box'), {
-                    list: bookNames
-                });
-
-            })
-            .catch(e => {
-                console.error(e);
-            });
         }
     };
 

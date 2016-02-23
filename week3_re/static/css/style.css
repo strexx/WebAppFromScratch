@@ -224,6 +224,14 @@ input[type="text"] {
     margin: 1em 0;
 }
 
+.fullheight {
+    height: 100%;
+}
+
+.is-visible {
+    display: block !important;
+}
+
 /*
 ** Book detail page
 */
